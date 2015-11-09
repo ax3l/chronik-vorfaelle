@@ -22,6 +22,13 @@ Dieses Repository ("Archiv") ist in folgende unabhängige Branches
               besucht werden können
 
 
+## In Arbeit
+
+- Quellen-Links in GeoJSON und Pop-Up Beschreibungen übernehmen
+- Filtern nach Kategorie
+- Animation Zeitverlauf
+
+
 ## Danksagungen
 
 Vielen Dank an die großartigen Menschen von mut-gegen-rechte-gewalt.de
