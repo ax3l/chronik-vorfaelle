@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <title>Visualisierung Flüchtlingsfeindlicher Vorfälle in Deutschland 2015</title>
+
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <link rel="stylesheet" href="PruneCluster/dist/LeafletStyleSheet.css" />
+    <style type="text/css">
+      html, body, #map {
+        height: 100%; width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .prunecluster-small {
+        background-color: rgba(225, 200, 35, 0.5);
+      }
+      .prunecluster-small div {
+        background-color: rgba(225, 200, 35, 0.6);
+      }
+      .prunecluster-medium {
+        background-color: rgba(220, 90, 23, 0.5);
+      }
+      .prunecluster-medium div {
+        background-color: rgba(220, 90, 23, 0.5);
+      }
+      .prunecluster-large {
+        background-color: rgba(140, 12, 23, 0.5);
+      }
+      .prunecluster-large div {
+        background-color: rgba(140, 12, 23, 0.6);
+      }
+    </style>
+
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <script src="PruneCluster/dist/PruneCluster.js"></script>
+  </head>
+
+  <body>
+    <div id="map"></div>
+
+    <script type="text/javascript"> 
+      // init map and zoom to Germany
+      var map = L.map('map').setView([50.0, 10.0], 6);
+
+      // limit panning to Germany
+      map.setMaxBounds([
+        [60.0, 0.0],
+        [40.0, 22.0]
+      ]);
+
+      // choose tile backend (OSM)
+      L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', //'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      {
+        minZoom: 6,
+        maxZoom: 14,
+        attribution: '&copy; <a href="https://github.com/ax3l/chronik-vorfaelle/tree/gh-pages/img">Icons</a> | &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
+      }).addTo(map);
+
+      // add a marker
+      // L.marker([51.5, -0.09]).addTo(map)
+      //  .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+      //  .openPopup();
+
+      // marker helper functions
+      function createIcon(data, category) {
+        // See http://leafletjs.com/reference.html#icon
+        if( category == "Brandanschlag" )
+          return L.icon({
+            iconUrl: 'img/house.svg',
+            iconSize: [50, 50],
+            iconAnchor: [25, 50],
+            popupAnchor: [0, -30]
+            });
+
+        if( category.indexOf("verletzung") > -1 )
+          return L.icon({
+            iconUrl: 'img/attack.svg',
+            iconSize: [50, 50],
+            iconAnchor: [25, 50],
+            popupAnchor: [0, -30]
+            });
+
+        if( category.indexOf("Sonstige Angriffe auf Unterk") > -1 )
+          //return L.icon({
+          //  iconUrl: 'img/fire.svg',
+          //  iconSize: [40, 40],
+          //  iconAnchor: [20, 40],
+          //  popupAnchor: [0, -25]
+          //  });
+          return L.icon({
+            iconUrl: 'img/clash.svg',
+            iconSize: [50, 50],
+            iconAnchor: [25, 50],
+            popupAnchor: [0, -30]
+            });
+
+        if( category == "Kundgebung/Demo" )
+          return L.icon({
+            iconUrl: 'img/demo.svg',
+            iconSize: [50, 50],
+            iconAnchor: [25, 50],
+            popupAnchor: [0, -30]
+            });
+
+        else
+          return L.icon({
+            iconUrl: 'img/clash.svg',
+            iconSize: [50, 50],
+            iconAnchor: [25, 50],
+            popupAnchor: [0, -30]
+            });
+      }
+
+      var pruneCluster = new PruneClusterForLeaflet(100, 10);
+      var markers = [];
+
+// load JSON
+var xmlhttp = new XMLHttpRequest();
+var url = "https://raw.githubusercontent.com/ax3l/chronik-vorfaelle/data/vorfaelle.geojson";
+
+xmlhttp.onreadystatechange = function() {
+  if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    var geo_json = JSON.parse(xmlhttp.responseText);
+    var vorfaelle = geo_json['features'];
+
+    for(var i=0, l=vorfaelle.length; i<l; ++i) {
+      v = vorfaelle[i];
+      coord = v['geometry']['coordinates']
+      var marker = new PruneCluster.Marker( coord[1], coord[0] );
+      // marker.data.name = 'Roger';
+      // marker.data.ID = '76ez';
+      // number or a string; minimize the performance cost: recommended 0-7
+      marker.category = v.properties.title;
+      marker.data.icon = createIcon;
+      // marker.weight = 4;
+      // marker.filtered = true|false;
+      marker.data.popup = '<b><i>' + v.properties.city + '</i>, ' +
+                          v.properties.date + ':</b> ' + v.properties.description +
+                          '<br /><b>Quelle:</b> ' + v.properties.source;
+
+      markers.push(marker);
+      pruneCluster.RegisterMarker(marker);
+
+      // break;
+    }
+
+    // pruneCluster.Cluster.Size = 87;
+    // pruneCluster.ProcessView();
+    map.addLayer(pruneCluster);
+    pruneCluster.RedrawIcons();
+  }
+}
+
+xmlhttp.open("GET", url, true);
+xmlhttp.send();
+
+    </script>
+  </body>
+</html>
