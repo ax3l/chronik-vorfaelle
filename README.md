@@ -10,7 +10,8 @@ mit freundlicher Genehmigung der Amadeu Antonio Stiftung.
 
 ## Inhalt dieses Repositories
 
-Dieses repository ist in folgende unabhängige branches gegliedert:
+Dieses Repository ("Archiv") ist in folgende unabhängige Branches
+("Zweige") gegliedert:
 
 - `readme`: enthält diese Information
 - `data`: exportierte und um Koordinaten angereicherte Rohdaten,
@@ -18,7 +19,7 @@ Dieses repository ist in folgende unabhängige branches gegliedert:
 - `scraper`: Skripte zum Erstellen der Daten
 - `gh-pages`: statische HTML Seiten mit interaktiven Karten welche
               unter https://ax3l.github.io/chronik-vorfaelle/
-              besucht werden können (in Arbeit)
+              besucht werden können
 
 
 ## Danksagungen
@@ -31,7 +32,7 @@ Kudos an die Entwickler und Communities folgender Open-Source Projekte:
 - [scrapy](http://scrapy.org)
 - [geographic JSON](http://geojson.org) WG (IETF)
 - [geopy](https://github.com/geopy/geopy)
-- [leaflet.js](leafletjs.com)
+- [leaflet.js](http://leafletjs.com) ([PruneCluster](https://github.com/SINTEF-9012/PruneCluster) plugin)
 - [OpenStreetMap](http://openstreetmap.org)
 
 Für Hosting und Vorschau Visualisierungen danke an GitHub &
