@@ -26,6 +26,8 @@ Dieses Repository ("Archiv") ist in folgende unabhängige Branches
 
 - Quellen-Links in GeoJSON und Pop-Up Beschreibungen übernehmen
 - Filtern nach Kategorie
+- "uncluster" Knopf
+- Legende
 - Animation Zeitverlauf
 
 
