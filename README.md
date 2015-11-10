@@ -28,6 +28,7 @@ Dieses Repository ("Archiv") ist in folgende unabhängige Branches
 - Filtern nach Kategorie
 - "uncluster" Knopf
 - Legende
+- social media: sharing braucht spezielle meta tags
 - Animation Zeitverlauf
 
 
