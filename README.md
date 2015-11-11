@@ -25,6 +25,7 @@ Dieses Repository ("Archiv") ist in folgende unabhängige Branches
 ## In Arbeit
 
 - Quellen-Links in GeoJSON und Pop-Up Beschreibungen übernehmen
+- Exportiere und füge letzte Aktualisierung hinzu (JSON)
 - Filtern nach Kategorie
 - "uncluster" Knopf
 - Legende
