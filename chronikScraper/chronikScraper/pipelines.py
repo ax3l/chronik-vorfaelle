@@ -40,7 +40,7 @@ class EntryPipeline(object):
         geolocator = Nominatim()
         place = u"{city}, {state}".format(**item)
         # print(place)
-        location = geolocator.geocode(place)
+        location = geolocator.geocode(place, timeout=5) # 5sec timeout
 
         if not location:
             raise DropItem("Unknown coordinates for %s" % item)
