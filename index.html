@@ -44,6 +44,7 @@
     <meta property="article:section" content="Gesellschaft" />
     <meta property="article:tag" content="Flucht" />
     <meta property="article:tag" content="Refugees" />
+    <meta property="article:tag" content="Gewalt" />
     <meta property="article:tag" content="Asyl" />
     <meta property="article:tag" content="kaltland" />
     <!-- <meta property="article:published_time" content="2013-09-17T05:59:00+01:00" />
@@ -84,19 +85,24 @@
         background-color: rgba(140, 12, 23, 0.6);
       }
       .legend {
-        line-height: 60px;
-        color: #555;
-        padding: 6px 8px;
+        line-height: 50px;
+        padding: 0px 10px;
         background: white;
         background: rgba(255,255,255,0.8);
         box-shadow: 0 0 15px rgba(0,0,0,0.2);
         border-radius: 8px;
       }
       .legend img {
-        width: 50px;
-        height: 50px;
+        width: 40px;
+        height: 40px;
         float: left;
         margin-right: 10px;
+      }
+      .legend span {
+        display: inline-block;
+        width: 105px;
+        line-height: 14px;
+        word-wrap: break-word;
       }
     </style>
 
@@ -131,13 +137,13 @@
       legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'legend');
         div.innerHTML += '<img src="img/house.svg" />' +
-                         'Brandanschlag<br />';
+                         '<span>Brandanschlag</span><br />';
         div.innerHTML += '<img src="img/attack.svg" />' +
-                         'Tätlicher Übergriff/Körperverletzung<br />';
+                         '<span>Tätlicher Übergriff / Körperverletzung</span><br />';
         div.innerHTML += '<img src="img/clash.svg" />' +
-                         'Sonstige Angriffe auf Unterkünfte<br />';
+                         '<span>Sonstige Angriffe auf Unterkünfte</span><br />';
         div.innerHTML += '<img src="img/demo.svg" />' +
-                         'Kundgebung/Demo<br />';
+                         '<span>Kundgebung / Demo</span><br />';
         return div;
       };
 
