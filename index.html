@@ -83,6 +83,21 @@
       .prunecluster-large div {
         background-color: rgba(140, 12, 23, 0.6);
       }
+      .legend {
+        line-height: 60px;
+        color: #555;
+        padding: 6px 8px;
+        background: white;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        border-radius: 8px;
+      }
+      .legend img {
+        width: 50px;
+        height: 50px;
+        float: left;
+        margin-right: 10px;
+      }
     </style>
 
     <script src="bower_components/leaflet/dist/leaflet.js"></script>
@@ -109,6 +124,24 @@
         maxZoom: 14,
         attribution: 'Datenquelle: <a href="https://www.mut-gegen-rechte-gewalt.de/service/chronik-vorfaelle">Mut gegen rechte Gewalt</a> | &copy; <a href="https://github.com/ax3l/chronik-vorfaelle/tree/gh-pages/img">Icons</a> | &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
       }).addTo(map);
+
+      // legend
+      var legend = L.control({position: 'bottomright'});
+
+      legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'legend');
+        div.innerHTML += '<img src="img/house.svg" />' +
+                         'Brandanschlag<br />';
+        div.innerHTML += '<img src="img/attack.svg" />' +
+                         'Tätlicher Übergriff/Körperverletzung<br />';
+        div.innerHTML += '<img src="img/clash.svg" />' +
+                         'Sonstige Angriffe auf Unterkünfte<br />';
+        div.innerHTML += '<img src="img/demo.svg" />' +
+                         'Kundgebung/Demo<br />';
+        return div;
+      };
+
+      legend.addTo(map);
 
       // add a marker
       // L.marker([51.5, -0.09]).addTo(map)
@@ -168,46 +201,45 @@
       var pruneCluster = new PruneClusterForLeaflet(100, 10);
       var markers = [];
 
-// load JSON
-var xmlhttp = new XMLHttpRequest();
-var url = "https://raw.githubusercontent.com/ax3l/chronik-vorfaelle/data/vorfaelle.geojson";
+      // load JSON
+      var xmlhttp = new XMLHttpRequest();
+      var url = "https://raw.githubusercontent.com/ax3l/chronik-vorfaelle/data/vorfaelle.geojson";
 
-xmlhttp.onreadystatechange = function() {
-  if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-    var geo_json = JSON.parse(xmlhttp.responseText);
-    var vorfaelle = geo_json['features'];
+    xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        var geo_json = JSON.parse(xmlhttp.responseText);
+        var vorfaelle = geo_json['features'];
 
-    for(var i=0, l=vorfaelle.length; i<l; ++i) {
-      v = vorfaelle[i];
-      coord = v['geometry']['coordinates']
-      var marker = new PruneCluster.Marker( coord[1], coord[0] );
-      // marker.data.name = 'Roger';
-      // marker.data.ID = '76ez';
-      // number or a string; minimize the performance cost: recommended 0-7
-      marker.category = v.properties.title;
-      marker.data.icon = createIcon;
-      // marker.weight = 4;
-      // marker.filtered = true|false;
-      marker.data.popup = '<b><i>' + v.properties.city + '</i>, ' +
-                          v.properties.date + ':</b> ' + v.properties.description +
-                          '<br /><b>Quelle:</b> ' + v.properties.source;
+        for(var i=0, l=vorfaelle.length; i<l; ++i) {
+          v = vorfaelle[i];
+          coord = v['geometry']['coordinates']
+          var marker = new PruneCluster.Marker( coord[1], coord[0] );
+          // marker.data.name = 'Roger';
+          // marker.data.ID = '76ez';
+          // number or a string; minimize the performance cost: recommended 0-7
+          marker.category = v.properties.title;
+          marker.data.icon = createIcon;
+          // marker.weight = 4;
+          // marker.filtered = true|false;
+          marker.data.popup = '<b><i>' + v.properties.city + '</i>, ' +
+                              v.properties.date + ':</b> ' + v.properties.description +
+                              '<br /><b>Quelle:</b> ' + v.properties.source;
 
-      markers.push(marker);
-      pruneCluster.RegisterMarker(marker);
+          markers.push(marker);
+          pruneCluster.RegisterMarker(marker);
 
-      // break;
+          // break;
+        }
+
+        // pruneCluster.Cluster.Size = 87;
+        // pruneCluster.ProcessView();
+        map.addLayer(pruneCluster);
+        pruneCluster.RedrawIcons();
+      }
     }
 
-    // pruneCluster.Cluster.Size = 87;
-    // pruneCluster.ProcessView();
-    map.addLayer(pruneCluster);
-    pruneCluster.RedrawIcons();
-  }
-}
-
-xmlhttp.open("GET", url, true);
-xmlhttp.send();
-
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
     </script>
   </body>
 </html>
