@@ -28,9 +28,7 @@ Dieses Repository ("Archiv") ist in folgende unabhängige Branches
 - Exportiere und füge letzte Aktualisierung hinzu (JSON)
 - Filtern nach Kategorie
 - "uncluster" Knopf
-- Legende
 - cluster: feinkörniger bzw. pro bundesland?
-- Social Media Vorschau: Sharing braucht spezielle Meta Tags
 - Animation Zeitverlauf
 
 
