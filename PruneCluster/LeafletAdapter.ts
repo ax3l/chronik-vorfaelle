@@ -118,7 +118,7 @@ var PruneClusterForLeaflet = ((<any>L).Layer ? (<any>L).Layer : L.Class).extend(
 		var iconSize = 38;
 		var maxPopulation = this.Cluster.GetPopulation();
 
-		if (cluster.population < Math.max(10, maxPopulation*0.01)) {
+		if (cluster.population < Math.max(20, maxPopulation*0.01)) {
 			c += 'small';
 		} else if (cluster.population < Math.max(100, maxPopulation * 0.05)) {
 			c += 'medium';
