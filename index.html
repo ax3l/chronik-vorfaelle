@@ -230,6 +230,11 @@
           marker.data.popup = '<b><i>' + v.properties.city + '</i>, ' +
                               v.properties.date + ':</b> ' + v.properties.description +
                               '<br /><b>Quelle:</b> ' + v.properties.source;
+          source_href = v.properties.source_href;
+          for( h = 0; h < source_href.length; ++h ) {
+              marker.data.popup += ' <a href="' + source_href[h]
+                                 + '" target="_blank">[' + (h+1) + ']</a>';
+          }
 
           markers.push(marker);
           pruneCluster.RegisterMarker(marker);
