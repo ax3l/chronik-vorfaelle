@@ -24,12 +24,16 @@ Dieses Repository ("Archiv") ist in folgende unabhängige Branches
 
 ## In Arbeit
 
-- Quellen-Links in GeoJSON und Pop-Up Beschreibungen übernehmen
 - Exportiere und füge letzte Aktualisierung hinzu (JSON)
 - Filtern nach Kategorie
 - "uncluster" Knopf
 - cluster: feinkörniger bzw. pro bundesland?
 - Animation Zeitverlauf
+- Screenshot (desktop, mobile, pdf-print) jeder Quelle
+  inkl. Datum des Abrufs für das Archiv
+  ([khtml2png](http://khtml2png.sourceforge.net/),
+   [pdfkit](https://pypi.python.org/pypi/pdfkit/0.4.1),
+   [QtWebKit](https://webscraping.com/blog/Webpage-screenshots-with-webkit/))
 
 
 ## Danksagungen
