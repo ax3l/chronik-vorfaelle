@@ -18,6 +18,7 @@ class ChronikscraperItem(scrapy.Item):
     state = scrapy.Field()
 
     source = scrapy.Field()
+    source_href = scrapy.Field() # list of links
 
     injured = scrapy.Field()
 
