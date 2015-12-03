@@ -84,6 +84,7 @@
       .prunecluster-large div {
         background-color: rgba(140, 12, 23, 0.6);
       }
+
       .legend {
         line-height: 50px;
         padding: 0px 10px;
@@ -104,6 +105,28 @@
         line-height: 14px;
         word-wrap: break-word;
       }
+
+      .leaflet-top {
+        width: 100%;
+      }
+      .leaflet-top .title {
+        margin: 0;
+        width: 100%;
+        background: white;
+        background: rgba(255,255,255,0.95);
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      }
+
+      .leaflet-top .title h1 {
+        font-size: 20px;
+        padding: 1.1em;
+        margin: 0;
+        font-weight: 800;
+      }
+
+      /* .leaflet-top .leaflet-control-zoom {
+        margin-top: 3em;
+      } */
     </style>
 
     <script src="bower_components/leaflet/dist/leaflet.js"></script>
@@ -114,8 +137,10 @@
     <div id="map"></div>
 
     <script type="text/javascript"> 
+      var inIframe = (window.location != window.parent.location) ? true : false;
+
       // init map and zoom to Germany
-      var map = L.map('map').setView([51.5, 11.0], 6);
+      var map = L.map('map', {zoomControl: false}).setView([51.5, 11.0], 6);
 
       // limit panning to Germany
       map.setMaxBounds([
@@ -130,6 +155,25 @@
         maxZoom: 14,
         attribution: 'Datenquelle: <a href="https://www.mut-gegen-rechte-gewalt.de/service/chronik-vorfaelle">Mut gegen rechte Gewalt</a> | CC-BY <a href="https://github.com/ax3l/chronik-vorfaelle/tree/gh-pages/img">Icons</a> | &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors, Tiles courtesy of <a href="http://hot.openstreetmap.org/" target="_blank">Humanitarian OpenStreetMap Team</a>'
       }).addTo(map);
+
+      // title bar
+      var title = L.control({position: 'topleft'});
+
+      title.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'title');
+        div.innerHTML = '<h1>Flüchtlingsfeindliche Vorfälle in Deutschland 2015</h1>';
+        return div;
+      };
+
+      if( !inIframe )
+        title.addTo(map);
+
+      // position zoom buttons
+      var zoom = L.control.zoom({
+          position: 'topleft'
+      });
+
+      zoom.addTo(map);
 
       // legend
       var legend = L.control({position: 'bottomright'});
