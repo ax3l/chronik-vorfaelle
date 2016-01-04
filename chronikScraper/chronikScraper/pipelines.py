@@ -38,7 +38,7 @@ class EntryPipeline(object):
 
         # add geo location
         geolocator = Nominatim()
-        place = u"{city}, {state}".format(**item)
+        place = u"{city}, {state}, Deutschland".format(**item)
         # print(place)
         location = geolocator.geocode(place, timeout=5) # 5sec timeout
 
