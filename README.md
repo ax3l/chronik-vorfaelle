@@ -15,7 +15,8 @@ Dieses Repository ("Archiv") ist in folgende unabhängige Branches
 
 - `readme`: enthält diese Information
 - `data`: exportierte und um Koordinaten angereicherte Rohdaten,
-          werden unregelmäßig aktualisiert
+          werden regelmäßig aktualisiert
+          ([letztes Update](https://github.com/ax3l/chronik-vorfaelle/commits/data))
 - `scraper`: Skripte zum Erstellen der Daten
 - `gh-pages`: statische HTML Seiten mit interaktiven Karten welche
               unter https://ax3l.github.io/chronik-vorfaelle/
@@ -29,9 +30,9 @@ Die exportierte und um geographische Koordinaten ergänzte
 kann wie folgt heruntergeladen werden:
 
 - [GeoJSON](https://raw.githubusercontent.com/ax3l/chronik-vorfaelle/data/vorfaelle.geojson)
-  (bevorzugt ([info](http://geojson.org/)))
+  (bevorzugt) [Datenformat](http://geojson.org/)
 - [CSV](https://raw.githubusercontent.com/ax3l/chronik-vorfaelle/data/vorfaelle.csv)
-  (experimentell ([info](https://de.wikipedia.org/wiki/CSV_%28Dateiformat%29)))
+  (experimentell) [Datenformat](https://de.wikipedia.org/wiki/CSV_%28Dateiformat%29)
 
 
 ## In Arbeit
@@ -58,8 +59,10 @@ Kudos an die Entwickler und Communities folgender Open-Source Projekte:
 - [scrapy](http://scrapy.org)
 - [geographic JSON](http://geojson.org) WG (IETF)
 - [geopy](https://github.com/geopy/geopy)
+- [json_to_csv.py](https://github.com/vinay20045/json-to-csv)
 - [leaflet.js](http://leafletjs.com) ([PruneCluster](https://github.com/SINTEF-9012/PruneCluster) plugin)
 - [OpenStreetMap](http://openstreetmap.org)
+- [Humanitarian OpenStreetMap Team](http://hot.openstreetmap.org/)
 
 Für Hosting und Vorschau Visualisierungen danke an GitHub &
 [MapBox](http://mapbox.com).
