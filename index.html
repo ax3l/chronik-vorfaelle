@@ -93,11 +93,21 @@
         box-shadow: 0 0 15px rgba(0,0,0,0.2);
         border-radius: 8px;
       }
+      .legend p {
+        margin: 0;
+        cursor: pointer;
+      }
       .legend img {
         width: 40px;
         height: 40px;
         float: left;
         margin-right: 10px;
+        opacity: 0.4;
+        filter: alpha(opacity=40); /* msie */
+      }
+      .legend img.selected {
+        opacity: 1.0;
+        filter: alpha(opacity=100); /* msie */
       }
       .legend span {
         display: inline-block;
@@ -175,20 +185,66 @@
 
       zoom.addTo(map);
 
+      // categories
+      //   0-indexed namings (sorted)
+      categories = ["Brandanschlag",
+                    "Tätlicher Übergriff/Körperverletzung",
+                    "Sonstige Angriffe auf Unterkünfte",
+                    "Kundgebung/Demo"];
+      //   (unsorted)
+      categories_selected = categories.slice();
+      //   images (sorted)
+      categories_img = ["img/house.svg",
+                        "img/attack.svg",
+                        "img/clash.svg",
+                        "img/demo.svg"];
+
       // legend
       var legend = L.control({position: 'bottomright'});
 
+      var switchCategory = function () {
+        var cidx = -1;
+        if( this instanceof HTMLImageElement ) {
+          var fname = 'img/' + this.src.replace(/^.*[\\\/]/, '');
+          cidx = categories_img.indexOf(fname);
+        } else {
+          var cname = this.textContent.replace(" / ", "/");
+          cidx = categories.indexOf(cname);
+        }
+
+        var cat = this.parentElement;
+        var cname = categories[cidx];
+        var img = cat.getElementsByTagName('img')[0];
+        if( img.className.indexOf("selected") > -1 ) {
+            img.className = "";
+            categories_selected.splice(categories_selected.indexOf(cname), 1);
+        }
+        else {
+            img.className = "selected";
+            categories_selected.push(cname);
+        }
+        updateFilter();
+      };
+
       legend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'legend');
-        div.innerHTML += '<img src="img/house.svg" />' +
-                         '<span>Brandanschlag</span><br />';
-        div.innerHTML += '<img src="img/attack.svg" />' +
-                         '<span>Tätlicher Übergriff / Körperverletzung</span><br />';
-        div.innerHTML += '<img src="img/clash.svg" />' +
-                         '<span>Sonstige Angriffe auf Unterkünfte</span><br />';
-        div.innerHTML += '<img src="img/demo.svg" />' +
-                         '<span>Kundgebung / Demo</span><br />';
-        return div;
+        var leg = L.DomUtil.create('div', 'legend');
+        for( var i = 0; i < categories.length; ++i) {
+            var cat = document.createElement("p");
+
+            var img = L.DomUtil.create('img', 'selected');
+            img.src = categories_img[i];
+            img.onclick = switchCategory;
+            cat.appendChild(img)
+
+            var labl = document.createElement("span");
+            var text = document.createTextNode(categories[i].replace("/", " / "));
+            labl.onclick = switchCategory;
+            labl.appendChild(text);
+            cat.appendChild(labl)
+
+            leg.appendChild(cat);
+        }
+        return leg;
       };
 
       legend.addTo(map);
@@ -201,47 +257,8 @@
       // marker helper functions
       function createIcon(data, category) {
         // See http://leafletjs.com/reference.html#icon
-        if( category == "Brandanschlag" )
-          return L.icon({
-            iconUrl: 'img/house.svg',
-            iconSize: [50, 50],
-            iconAnchor: [25, 50],
-            popupAnchor: [0, -30]
-            });
-
-        if( category.indexOf("verletzung") > -1 )
-          return L.icon({
-            iconUrl: 'img/attack.svg',
-            iconSize: [50, 50],
-            iconAnchor: [25, 50],
-            popupAnchor: [0, -30]
-            });
-
-        if( category.indexOf("Sonstige Angriffe auf Unterk") > -1 )
-          //return L.icon({
-          //  iconUrl: 'img/fire.svg',
-          //  iconSize: [40, 40],
-          //  iconAnchor: [20, 40],
-          //  popupAnchor: [0, -25]
-          //  });
-          return L.icon({
-            iconUrl: 'img/clash.svg',
-            iconSize: [50, 50],
-            iconAnchor: [25, 50],
-            popupAnchor: [0, -30]
-            });
-
-        if( category == "Kundgebung/Demo" )
-          return L.icon({
-            iconUrl: 'img/demo.svg',
-            iconSize: [50, 50],
-            iconAnchor: [25, 50],
-            popupAnchor: [0, -30]
-            });
-
-        else
-          return L.icon({
-            iconUrl: 'img/clash.svg',
+        return L.icon({
+            iconUrl: categories_img[category],
             iconSize: [50, 50],
             iconAnchor: [25, 50],
             popupAnchor: [0, -30]
@@ -250,6 +267,31 @@
 
       var pruneCluster = new PruneClusterForLeaflet(100, 10);
       var markers = [];
+
+      // filter functions for user selection
+      var updateFilter = function () {
+        // categories to filter (filtered true == do not show)
+        //   calculate here: all elements not in categories_selected
+        //                   but in categories
+        var categories_filtered = categories.filter(function(cat){
+          return categories_selected.indexOf(cat) == -1;
+        });
+        var categories_filtered_idx = categories_filtered.map(function(cat){
+          return categories.indexOf(cat);
+        });
+
+        // time interval
+        var date_min = new Date(15, 01, 01);   // 01.01.2015
+        var date_max = new Date();             // today
+
+        var size = markers.length;
+        for (var i = 0; i < size; ++i) {
+            // category filter
+            markers[i].filtered = (categories_filtered_idx.indexOf(markers[i].category) == -1) ? false : true;
+            // date range filter
+        }
+        pruneCluster.ProcessView();
+      }
 
       // load JSON
       var xmlhttp = new XMLHttpRequest();
@@ -267,7 +309,7 @@
           // marker.data.name = 'Roger';
           // marker.data.ID = '76ez';
           // number or a string; minimize the performance cost: recommended 0-7
-          marker.category = v.properties.title;
+          marker.category = categories.indexOf(v.properties.title);
           marker.data.icon = createIcon;
           // marker.weight = 4;
           // marker.filtered = true|false;
