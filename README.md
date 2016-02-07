@@ -23,7 +23,7 @@ Dieses Repository ("Archiv") ist in folgende unabhängige Branches
               besucht werden können
 
 
-## Chronik zum Download
+## Daten zum Download
 
 Die exportierte und um geographische Koordinaten ergänzte
 [Chronik](https://www.mut-gegen-rechte-gewalt.de/service/chronik-vorfaelle)
