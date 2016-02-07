@@ -1,5 +1,5 @@
-Visualisierung Flüchtlingsfeindlicher Vorfälle in Deutschland 2015
-------------------------------------------------------------------
+Visualisierung Flüchtlingsfeindlicher Vorfälle in Deutschland 2015-2016
+-----------------------------------------------------------------------
 
 Dies ist ein Projekt zur Visualisierung, Archivierung, Aufbereitung
 und journalistischen Weiternutzung der gesammelten Daten von
