@@ -22,6 +22,18 @@ Dieses Repository ("Archiv") ist in folgende unabhängige Branches
               besucht werden können
 
 
+## Chronik zum Download
+
+Die exportierte und um geographische Koordinaten ergänzte
+[Chronik](https://www.mut-gegen-rechte-gewalt.de/service/chronik-vorfaelle)
+kann wie folgt heruntergeladen werden:
+
+- [GeoJSON](https://raw.githubusercontent.com/ax3l/chronik-vorfaelle/data/vorfaelle.geojson)
+  (bevorzugt ([info](http://geojson.org/)))
+- [CSV](https://raw.githubusercontent.com/ax3l/chronik-vorfaelle/data/vorfaelle.csv)
+  (experimentell ([info](https://de.wikipedia.org/wiki/CSV_%28Dateiformat%29)))
+
+
 ## In Arbeit
 
 - Exportiere und füge letzte Aktualisierung hinzu (JSON)
