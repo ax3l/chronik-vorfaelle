@@ -38,10 +38,9 @@ kann wie folgt heruntergeladen werden:
 ## In Arbeit
 
 - Exportiere und füge letzte Aktualisierung hinzu (JSON)
-- Filtern nach Kategorie
 - "uncluster" Knopf
 - cluster: feinkörniger bzw. pro bundesland?
-- Animation Zeitverlauf
+- Animation/Filter Zeitverlauf
 - Screenshot (desktop, mobile, pdf-print) jeder Quelle
   inkl. Datum des Abrufs für das Archiv
   ([khtml2png](http://khtml2png.sourceforge.net/),
