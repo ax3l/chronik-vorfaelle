@@ -41,6 +41,7 @@ kann wie folgt heruntergeladen werden:
 - "uncluster" Knopf
 - cluster: feinkörniger bzw. pro bundesland?
 - Animation/Filter Zeitverlauf
+- Histogramm: Ereignisse je Woche über Zeit
 - Suchfunktion (extra Seite? Filter-Suche nach Stadt/Bundesland/Datum?)
 - Screenshot (desktop, mobile, pdf-print) jeder Quelle
   inkl. Datum des Abrufs für das Archiv
