@@ -67,3 +67,14 @@ Kudos an die Entwickler und Communities folgender Open-Source Projekte:
 
 Für Hosting und Vorschau Visualisierungen danke an GitHub &
 [MapBox](http://mapbox.com).
+
+
+## Mediale Berichterstattung
+
+Unvollständige Liste von bekannten Berichten welche die hier vorliegenden
+Daten vollständig oder teilweise genutzt haben
+(und so freundlich waren eine Referenz zu setzen *hint, hint*):
+
+- **NY Times**, page A3, New York edition,
+  [*Bombing Trial Exposes Far-Right Grip in Germany*, 27. Februar 2016](http://www.nytimes.com/2016/02/27/world/europe/germany-migrant-arson-trial.html)
+  (graphics by [Gregor Aisch](https://twitter.com/driven_by_data/status/703652949176815616))
