@@ -48,6 +48,7 @@ kann wie folgt heruntergeladen werden:
   ([khtml2png](http://khtml2png.sourceforge.net/),
    [pdfkit](https://pypi.python.org/pypi/pdfkit/0.4.1),
    [QtWebKit](https://webscraping.com/blog/Webpage-screenshots-with-webkit/))
+- 2014 Daten: [Welt.de](http://static.apps.welt.de/2015/gewalt_karte/)
 
 
 ## Danksagungen
