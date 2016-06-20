@@ -58,6 +58,7 @@
 
     <!-- style sheets -->
     <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="bower_components/nouislider/distribute/nouislider.min.css" />
     <link rel="stylesheet" href="PruneCluster/dist/LeafletStyleSheet.css" />
     <style type="text/css">
       html, body, #map {
@@ -83,6 +84,19 @@
       }
       .prunecluster-large div {
         background-color: rgba(140, 12, 23, 0.6);
+      }
+
+      .slider {
+        width: 98%;
+        margin-bottom: 10px;
+      }
+
+      .legend p.dateRange {
+        font-weight: bold;
+      }
+      .legend p.dateRange span.dateCon {
+        margin-left:  0.5em;
+        margin-right: 0.5em;
       }
 
       .legend {
@@ -111,7 +125,7 @@
       }
       .legend span {
         display: inline-block;
-        width: 105px;
+        max-width: 105px;
         line-height: 14px;
         word-wrap: break-word;
       }
@@ -140,13 +154,16 @@
     </style>
 
     <script src="bower_components/leaflet/dist/leaflet.js"></script>
+    <script src="bower_components/nouislider/distribute/nouislider.min.js"></script>
+    <script src="bower_components/wnumb/wNumb.js"></script>
     <script src="PruneCluster/dist/PruneCluster.js"></script>
   </head>
 
   <body>
+    <div id="slida"></div>
     <div id="map"></div>
 
-    <script type="text/javascript"> 
+    <script type="text/javascript">
       var inIframe = (window.location != window.parent.location) ? true : false;
 
       // init map and zoom to Germany
@@ -159,7 +176,8 @@
       ]);
 
       // choose tile backend (OSM)
-      L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', //'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+               // 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       {
         minZoom: 6,
         maxZoom: 14,
@@ -199,6 +217,92 @@
                         "img/clash.svg",
                         "img/demo.svg"];
 
+      var pruneCluster = new PruneClusterForLeaflet(100, 10);
+      var markers = [];
+
+      // filter functions for user selection
+      var updateFilter = function () {
+        // categories to filter (filtered true == do not show)
+        //   calculate here: all elements not in categories_selected
+        //                   but in categories
+        var categories_filtered = categories.filter(function(cat){
+          return categories_selected.indexOf(cat) == -1;
+        });
+        var categories_filtered_idx = categories_filtered.map(function(cat){
+          return categories.indexOf(cat);
+        });
+
+        // time interval
+        var slider = document.getElementsByClassName('slider')[0];
+
+        var date_min = new Date("2015-01-01");   // 01.01.2015
+        var date_max = new Date();             // today
+        if (slider != null) {
+            date_min = new Date(+slider.noUiSlider.get()[0]);
+            date_max = new Date(+slider.noUiSlider.get()[1]);
+        }
+        date_min = date_min.getTime();
+        date_max = date_max.getTime();
+
+        var size = markers.length;
+        for (var i = 0; i < size; ++i) {
+            var is_enabled = new Boolean(true);
+            // category filter
+            is_enabled = (categories_filtered_idx.indexOf(markers[i].category) == -1);
+            // date range filter
+            is_enabled &= (markers[i].data.date >= date_min);
+            is_enabled &= (markers[i].data.date <= date_max);
+
+            markers[i].filtered = !is_enabled;
+        }
+
+        pruneCluster.ProcessView();
+      }
+
+      // update time range in legend
+      updateTimeRange = function( values, handle ) {
+          var dateValues = [
+            document.getElementsByClassName('dateMin')[0],
+            document.getElementsByClassName('dateMax')[0]
+          ];
+          if( typeof dateValues[handle] !== "undefined" &&
+              typeof dateValues[handle] !== "null" ) {
+            dateInt = new Date(+values[handle]);
+            dateStr = ("0" + dateInt.getDate()).slice(-2) + "." +
+                      ("0" + (dateInt.getMonth() + 1)).slice(-2) + "." +
+                      dateInt.getFullYear();
+            dateValues[handle].innerHTML = dateStr;
+          }
+          updateFilter();
+      };
+
+      // time slider
+      var firstDate = new Date(2015,0,1).getTime();
+      var lastDate  = new Date().getTime();
+      var time_slider = L.control({position: 'bottomright'});
+      time_slider.onAdd = function (map) {
+        var slider = L.DomUtil.create('span', 'slider');
+
+        noUiSlider.create(slider, {
+          start: [firstDate, lastDate],
+          connect: true,
+          step: 7 * 24 * 60 * 60 * 1000, // step size: one week
+          format: wNumb({
+            decimals: 0
+          }), // integers only
+          range: {
+              'min': firstDate,
+              'max': lastDate,
+          }
+        });
+
+        slider.noUiSlider.on('update', updateTimeRange);
+
+        return slider;
+      }
+
+      time_slider.addTo(map);
+
       // legend
       var legend = L.control({position: 'bottomright'});
 
@@ -228,13 +332,24 @@
 
       legend.onAdd = function (map) {
         var leg = L.DomUtil.create('div', 'legend');
+
+        var dateRange = L.DomUtil.create('p', 'dateRange');
+        var dateMin = L.DomUtil.create('span', 'dateMin');
+        var dateCon = L.DomUtil.create('span', 'dateCon');
+        var dateMax = L.DomUtil.create('span', 'dateMax');
+        dateCon.textContent = "-";
+        dateRange.appendChild(dateMin);
+        dateRange.appendChild(dateCon);
+        dateRange.appendChild(dateMax);
+        leg.appendChild(dateRange);
+
         for( var i = 0; i < categories.length; ++i) {
             var cat = document.createElement("p");
 
             var img = L.DomUtil.create('img', 'selected');
             img.src = categories_img[i];
             img.onclick = switchCategory;
-            cat.appendChild(img)
+            cat.appendChild(img);
 
             var labl = document.createElement("span");
             var text = document.createTextNode(categories[i].replace("/", " / "));
@@ -249,11 +364,6 @@
 
       legend.addTo(map);
 
-      // add a marker
-      // L.marker([51.5, -0.09]).addTo(map)
-      //  .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-      //  .openPopup();
-
       // marker helper functions
       function createIcon(data, category) {
         // See http://leafletjs.com/reference.html#icon
@@ -263,34 +373,6 @@
             iconAnchor: [25, 50],
             popupAnchor: [0, -30]
             });
-      }
-
-      var pruneCluster = new PruneClusterForLeaflet(100, 10);
-      var markers = [];
-
-      // filter functions for user selection
-      var updateFilter = function () {
-        // categories to filter (filtered true == do not show)
-        //   calculate here: all elements not in categories_selected
-        //                   but in categories
-        var categories_filtered = categories.filter(function(cat){
-          return categories_selected.indexOf(cat) == -1;
-        });
-        var categories_filtered_idx = categories_filtered.map(function(cat){
-          return categories.indexOf(cat);
-        });
-
-        // time interval
-        var date_min = new Date(15, 01, 01);   // 01.01.2015
-        var date_max = new Date();             // today
-
-        var size = markers.length;
-        for (var i = 0; i < size; ++i) {
-            // category filter
-            markers[i].filtered = (categories_filtered_idx.indexOf(markers[i].category) == -1) ? false : true;
-            // date range filter
-        }
-        pruneCluster.ProcessView();
       }
 
       // load JSON
@@ -321,6 +403,10 @@
               marker.data.popup += ' <a href="' + source_href[h]
                                  + '" target="_blank">[' + (h+1) + ']</a>';
           }
+          // add date as integer
+          date_split = v.properties.date.split(".");
+          date_int = new Date(date_split[2] + "-" + date_split[1] + "-" + date_split[0]).getTime();
+          marker.data.date = date_int;
 
           markers.push(marker);
           pruneCluster.RegisterMarker(marker);
@@ -332,6 +418,10 @@
         // pruneCluster.ProcessView();
         map.addLayer(pruneCluster);
         pruneCluster.RedrawIcons();
+
+        // trigger slider date range
+        var slider = document.getElementsByClassName('slider')[0];
+        slider.noUiSlider.set(slider.noUiSlider.get());
       }
     }
 
