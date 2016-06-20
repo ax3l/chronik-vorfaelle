@@ -32,9 +32,39 @@ class EntryPipeline(object):
         file.write( json_txt )
         file.close()
 
+    def _format_item(self, item):
+        return u"{}: {}, {}".format(
+                   item["date"],
+                   item["city"],
+                   item["state"]
+               )
+
+    def _same_city_des_date(self, item1, item2):
+        if item1["description"] == item2["description"] and \
+           item1["city"] == item2["city"] and \
+           item1["date"] == item2["date"] :
+            return True
+        return False
+
     def process_item(self, item, spider):
         # print("PROCESS ITEM")
         # print(item)
+
+        is_doublicate = False
+        same_cdd = filter(lambda e: self._same_city_des_date(e["properties"], item), self.json_object['features'])
+
+        if len(same_cdd) :
+            is_doublicate = True
+        if is_doublicate:
+            print(u"[DUPLICATE] Duplicate chronik entry for " + self._format_item(item) +
+                  u" (duplicate of: " + self._format_item(same_cdd[0]["properties"]) + u")"
+                 )
+            return
+            raise DropItem("Duplicate chronik entry for {}: {}".format(
+                              item["date"].encode("ascii","ignore"),
+                              item["city"].encode("ascii","ignore")
+                            )
+                          )
 
         # add geo location
         geolocator = Nominatim()
@@ -43,7 +73,15 @@ class EntryPipeline(object):
         location = geolocator.geocode(place, timeout=5) # 5sec timeout
 
         if not location:
-            raise DropItem("Unknown coordinates for %s" % item)
+            print(u"[GEOMISS] No nominatim chronik entry for " + self._format_item(item))
+            return
+            raise DropItem("Unknown coordinates for {}: {}".format(
+                              item["date"].encode("ascii","ignore"),
+                              item["city"].encode("ascii","ignore"),
+                              item["state"].encode("ascii","ignore")
+                            )
+                          )
+
 
         lat = location.latitude
         long = location.longitude

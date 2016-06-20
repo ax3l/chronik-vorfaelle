@@ -44,7 +44,6 @@ class ChronikSpider(scrapy.Spider):
 
         # crawl next page
         for href in response.css("li.pager-next > a::attr('href')"):
-            #url = response.urljoin(href.extract())
             url = urlparse.urljoin(response.url, href.extract())
             # print("FOUND NEXT PAGE: " + url)
 
