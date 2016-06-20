@@ -23,6 +23,8 @@ class EntryPipeline(object):
         # other (should be empty)
         self.json_object = { "type": "FeatureCollection",
                              "features" : [] }
+        ## Nominatim cache
+        self.geo_cache = {}
 
     def close_spider(self, spider):
         # print("CLOSE PIPELINE")
@@ -67,10 +69,16 @@ class EntryPipeline(object):
                           )
 
         # add geo location
-        geolocator = Nominatim()
         place = u"{city}, {state}, Deutschland".format(**item)
-        # print(place)
-        location = geolocator.geocode(place, timeout=5) # 5sec timeout
+        if place in self.geo_cache:
+            # print(u"[GEOCACHE] Found '{}' in nominatim cache!".format(place))
+            location = self.geo_cache[place]
+        else:
+            # print(u"[GEOCACHE] Could NOT find '{}' in nominatim cache!".format(place))
+            geolocator = Nominatim()
+            # print(place)
+            location = geolocator.geocode(place, timeout=5) # 5sec timeout
+            self.geo_cache[place] = location
 
         if not location:
             print(u"[GEOMISS] No nominatim chronik entry for " + self._format_item(item))
