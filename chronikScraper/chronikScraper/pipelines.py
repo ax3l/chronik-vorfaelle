@@ -90,16 +90,15 @@ class EntryPipeline(object):
                             )
                           )
 
-
         lat = location.latitude
         long = location.longitude
 
         # visualization: adding a few meters noise
         # avoids hiding multiple points for the same city
-        noise = 2.e-3 * random.random() - 1.0e-3 # +- 1.e-3
-        lat  += noise
-        noise = 2.e-3 * random.random() - 1.0e-3 # +- 1.e-3
-        long += noise
+        #noise = 2.e-3 * random.random() - 1.0e-3 # +- 1.e-3
+        #lat  += noise
+        #noise = 2.e-3 * random.random() - 1.0e-3 # +- 1.e-3
+        #long += noise
 
         # convert to plain json
         #line = json.dumps(dict(item)) + "\n"
